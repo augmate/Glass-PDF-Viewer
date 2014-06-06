@@ -1,6 +1,7 @@
 package com.example.pdfviewer;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import com.qoppa.viewer.QPDFViewerView;
 
@@ -31,6 +32,13 @@ public class MainActivity extends Activity {
 		    viewer.loadDocument(file.getPath());
 		    viewer.showHideToolbar();
 		    setContentView(viewer);
+		    
+		    for(int i = viewer.getCurrentPageNumber(); i < viewer.getDocument().getPageCount();++i){
+		    	viewer.goToPage(i);
+		    	setContentView(viewer);
+		    	TimeUnit.SECONDS.sleep(2);
+		    }
+
 		}
 		catch(Exception e){
 			System.out.print(e);
