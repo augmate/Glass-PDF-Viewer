@@ -42,9 +42,9 @@ public class mainActivity extends Activity {
 		setContentView(imageView);
 		//code start
 		try {
-			String fileName = "/mnt/sdcard/FoxitBigPreview.pdf";
+			String fileName = "/mtp://[usb:003,015]/Phone/Pictures/augmate.pdf";
 			String password = "";
-			String strFontFilePath = "/mnt/sdcard/DroidSansFallback.ttf";
+			//String strFontFilePath = "/mnt/sdcard/DroidSansFallback.ttf";
 			rotateFlag = 0;
 			currentPage = 0;
 			int initialMemory = 8 * 1024 * 1024;
@@ -56,7 +56,7 @@ public class mainActivity extends Activity {
 			func.LoadCNSFontCMap();
 			func.LoadKoreaFontCMap();
 			func.LoadJapanFontCMap();
-			func.SetFontFileMap(strFontFilePath);
+			//func.SetFontFileMap(strFontFilePath);
 
 			myDoc = func.createFoxitDoc(fileName, password);
 			myDoc.CountPages();

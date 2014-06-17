@@ -27,7 +27,9 @@ public class mainActivity extends Activity {
 	private FoxitDoc myDoc;
 	private int currentPage = 0;
 	private float xScaleFactor = 1f;
-	private float yScaleFactor = 1f;
+	private float yScaleFactor = 1;
+	private int rotateFlag = 0;
+	public float fScal = (float) 1;
 	
 	private GestureDetector mGestureDetector;
 	
@@ -94,14 +96,31 @@ public class mainActivity extends Activity {
 	        gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
 	            @Override
 	            public boolean onGesture(Gesture gesture) {
+	            	float nPageWidth = -1;
+	        		float nPageHeight = -1;
+	        		nPageWidth = myDoc.GetPageSizeX(currentPage);
+	           	  	nPageHeight = myDoc.GetPageSizeY(currentPage);
+	           	  	if(nPageWidth == 0 || nPageHeight == 0)
+	           		  return true;
+	        		Display display = getWindowManager().getDefaultDisplay();
+	        		float nWidth = display.getWidth();
+	        		float nHeight = display.getHeight();	
+	        		int nZoomFlag = -1;
 	                if (gesture == Gesture.TAP) {
-	                	Log.d("Darien", "Tap to turn page");
-	                    return true;
+	                	Log.d("Darien", "ZoomIN");
+	                	if(fScal >=1.5)
+		  		 		  return true;
+	                	fScal += 0.25;
+	                	if(fScal >= 5)
+	                		fScal = 5;
+	                	imageView.setImageBitmap(myDoc.getPageBitmap(currentPage, nPageWidth*fScal, nPageHeight*fScal,rotateFlag,-1));
+	                	imageView.invalidate();	  
+	                	return true;
 	                } else if (gesture == Gesture.TWO_TAP) {
 	                    // do something on two finger tap
 	                    return true;
 	                } else if (gesture == Gesture.SWIPE_LEFT) {
-	                	Log.d("Darien", "Page Forward");
+	                	Log.d("Darien", "Page Back");
 	                	if(currentPage==0)
 	    					return true;
 	    				
@@ -111,7 +130,7 @@ public class mainActivity extends Activity {
 	    				imageView.invalidate();	     
 	                    return true;
 	                } else if (gesture == Gesture.SWIPE_RIGHT) {
-	                	Log.d("Darien", "Page back");
+	                	Log.d("Darien", "Page Forward");
 	                	if(currentPage+1==myDoc.CountPages())
 	    					return true;
 

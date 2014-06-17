@@ -63,25 +63,52 @@ public class FoxitDoc{
 		}
 	}
 
-	private void RenderPage(int pageIndex, Bitmap bm, int startX, int startY, int rotate, int flags, Rectangle rect ,int pauseHandler)
-	{
-		try {
-			int dib = EMBJavaSupport.FSBitmapCreate(bm.getWidth(), bm.getHeight(), 7, null, 0);
-			EMBJavaSupport.FSBitmapFillColor(dib,0xff);
-			float scaledWidth = bm.getWidth() ;
-			float scaledHeight = bm.getHeight() ;
-			EMBJavaSupport.FPDFRenderPageStart(dib,pageHandles[pageIndex],startX,startY,(int)scaledWidth,(int)scaledHeight,rotate,flags,rect,pauseHandler);
-			byte[] bmpbuf=EMBJavaSupport.FSBitmapGetBuffer(dib);
-			
-			ByteBuffer bmBuffer = ByteBuffer.wrap(bmpbuf); 
-			bm.copyPixelsFromBuffer(bmBuffer);
-			
-		} catch (memoryException e) {
-			postToLog(e.getMessage());
-		} catch (Exception e) {
-			postToLog(e.getMessage());
-		}
-	}
+	private void RenderPage(int pageIndex, Bitmap bm, int startX, int startY,
+            float xScale, float yScale, int rotate, int flags, Rectangle rect,
+            int pauseHandler) {
+    try {
+            int dib = EMBJavaSupport.FSBitmapCreate(bm.getWidth(),
+                            bm.getHeight(), 7, null, 0);
+            EMBJavaSupport.FSBitmapFillColor(dib, 0xff);
+            float scaledWidth = bm.getWidth() * xScale;
+            float scaledHeight = bm.getHeight() * yScale;
+            EMBJavaSupport.FPDFRenderPageStart(dib, pageHandles[pageIndex],
+                            startX, startY, (int) scaledWidth, (int) scaledHeight,
+                            rotate, flags, rect, pauseHandler);
+            byte[] bmpbuf = EMBJavaSupport.FSBitmapGetBuffer(dib);
+
+            ByteBuffer bmBuffer = ByteBuffer.wrap(bmpbuf);
+            bm.copyPixelsFromBuffer(bmBuffer);
+
+    } catch (memoryException e) {
+            postToLog(e.getMessage());
+    } catch (Exception e) {
+            postToLog(e.getMessage());
+    }
+}
+
+private void RenderPage(int pageIndex, Bitmap bm, int startX, int startY,
+            int rotate, int flags, Rectangle rect, int pauseHandler) {
+    try {
+            int dib = EMBJavaSupport.FSBitmapCreate(bm.getWidth(),
+                            bm.getHeight(), 7, null, 0);
+            EMBJavaSupport.FSBitmapFillColor(dib, 0xff);
+            float scaledWidth = bm.getWidth();
+            float scaledHeight = bm.getHeight();
+            EMBJavaSupport.FPDFRenderPageStart(dib, pageHandles[pageIndex],
+                            startX, startY, (int) scaledWidth, (int) scaledHeight,
+                            rotate, flags, rect, pauseHandler);
+            byte[] bmpbuf = EMBJavaSupport.FSBitmapGetBuffer(dib);
+
+            ByteBuffer bmBuffer = ByteBuffer.wrap(bmpbuf);
+            bm.copyPixelsFromBuffer(bmBuffer);
+
+    } catch (memoryException e) {
+            postToLog(e.getMessage());
+    } catch (Exception e) {
+            postToLog(e.getMessage());
+    }
+}
 	
 	protected void postToLog(String msg){
 		Log.v(TAG,msg);
@@ -157,17 +184,31 @@ public class FoxitDoc{
 		}
 	}
 	
-	public Bitmap getPageBitmap(int pageIndex,float displayWidth, float displayHeight, int rotateFlag,int ZoomFlag)
+	public Bitmap getPageBitmap(int pageIndex,int displayWidth, int displayHeight, float xScaleFactor, float yScaleFactor, int rotateFlag)
 	{
 		if(pageHandles[pageIndex] == 0) {
 			this.InitPage(pageIndex);
 		}
 		
 		Bitmap bm;
-		bm = Bitmap.createBitmap((int)displayWidth,(int)displayHeight,Bitmap.Config.ARGB_8888);
-		this.RenderPage(pageIndex,bm,0,0,rotateFlag,1,null,0);
-		nZoomFlag = ZoomFlag;
+		bm = Bitmap.createBitmap(displayWidth,displayHeight,Bitmap.Config.ARGB_8888);
+		this.RenderPage(pageIndex,bm,0,0,xScaleFactor,yScaleFactor,rotateFlag,0,null,0);
 		return bm;	
+	}
+
+
+	public Bitmap getPageBitmap(int pageIndex, float displayWidth,
+			float displayHeight, int rotateFlag, int ZoomFlag) {
+		if (pageHandles[pageIndex] == 0) {
+			this.InitPage(pageIndex);
+		}
+
+		Bitmap bm;
+		bm = Bitmap.createBitmap((int) displayWidth, (int) displayHeight,
+				Bitmap.Config.ARGB_8888);
+		this.RenderPage(pageIndex, bm, 0, 0, rotateFlag, 1, null, 0);
+		nZoomFlag = ZoomFlag;
+		return bm;
 	}
 	public int GetDoc()
 	{

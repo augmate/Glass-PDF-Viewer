@@ -16,10 +16,10 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := fpdfembedsdk
 LOCAL_SRC_FILES := ../../jni/FoxitEMBSDK_EMBJavaSupport.cpp
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../include/header_files
 LOCAL_LDLIBS := -llog -g -L. -ljnigraphics
 
 #fill in the foxit library here
-LOCAL_LDLIBS += ../bin/libfpdfemb_android.a
+LOCAL_LDLIBS += $(LOCAL_PATH)/../../bin/libfpdfemb_android.a
 
 include $(BUILD_SHARED_LIBRARY)

@@ -5,7 +5,7 @@ import com.foxitsample.exception.*;
 import FoxitEMBSDK.EMBJavaSupport;
 
 /**
- * defined for a wrap for All PDF implements¡£
+ * defined for a wrap for All PDF implementsï¿½ï¿½
  * @author Foxit
  *
  */
@@ -24,7 +24,7 @@ public class WrapPDFFunc
 	public boolean InitFoxitFixedMemory(int initMemSize) throws parameterException, invalidLicenseException{
 		EMBJavaSupport.FSMemInitFixedMemory(initMemSize);		
 		EMBJavaSupport.FSInitLibrary(0);
-		EMBJavaSupport.FSUnlock("XXXXXXXXX", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+		EMBJavaSupport.FSUnlock("SDKEDTEMP", "5C73004A7CC3B0E37BA89FD32E5E046839E10B3A");
 		return true;
 	}
 	
