@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item android:id="@+id/Note" android:title="Note"></item>
+	<item android:id="@+id/Pencil" android:title="Pencil"></item>
+	<item android:id="@+id/Highlight" android:title="Highlight"></item>
+	<item android:id="@+id/Stamp" android:title="Stamp"></item>
+	<item android:id="@+id/FileAttachment" android:title="FileAttachment"></item>
+	<item android:id="@+id/Delete" android:title="Delete" android:icon="@android:drawable/ic_menu_delete"></item>
+</menu>

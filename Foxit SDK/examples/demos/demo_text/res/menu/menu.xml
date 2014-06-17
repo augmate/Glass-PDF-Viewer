@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/SelectText"
+    	  android:title="Select Text"></item>
+
+    <item android:id="@+id/ExtractText"
+    	  android:title="Extract Text"></item>
+</menu>

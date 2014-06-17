@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, mainActivity!</string>
+    <string name="app_name">Demo_Reflow</string>
+
+
+
+<string name="menu_on">reflow on</string>
+<string name="menu_off">reflow off</string>
+
+
+
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/FitWidth"
+    	  android:title="Fit Width"></item>
+
+    <item android:id="@+id/FitHeight"
+    	  android:title="Fit Height"></item>
+    	  
+    <item android:id="@+id/ActualSize"
+    	  android:title="ActualSize"></item>
+    	  
+    <item android:id="@+id/ZoomIn"
+    	  android:title="ZoomIn"></item>
+    	  
+     <item android:id="@+id/ZoomOut"
+    	  android:title="ZoomOut"></item>
+</menu>
