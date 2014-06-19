@@ -55,6 +55,9 @@ public class mainActivity extends Activity implements SensorEventListener{
 	private SensorManager mSensorManager;
 	private Sensor mGyroscope;
 	private boolean gyroLock = true;
+	private int gyroSense = 20;
+	private float gyroX;
+	private float gyroY;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
@@ -88,8 +91,8 @@ public class mainActivity extends Activity implements SensorEventListener{
       		Display display = getWindowManager().getDefaultDisplay();
       		int nHeight = display.getHeight() ;
       		fScal = nHeight / myDoc.GetPageSizeY(currentPage);
-      		imageView.setBitmap(myDoc.getPageBitmap(currentPage, display.getWidth(), display.getHeight(), xScaleFactor, yScaleFactor,0));
-      		//imageView.setBitmap(myDoc.getPageBitmap(currentPage, myDoc.GetPageSizeX(currentPage)* fScal, nHeight,rotateFlag,M_FitHeight));
+      		//imageView.setBitmap(myDoc.getPageBitmap(currentPage, display.getWidth(), display.getHeight(), xScaleFactor, yScaleFactor,0));
+      		imageView.setBitmap(myDoc.getPageBitmap(currentPage, myDoc.GetPageSizeX(currentPage)* fScal, nHeight,rotateFlag,M_FitHeight));
       		imageView.invalidate();
       		
       		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -227,10 +230,10 @@ public class mainActivity extends Activity implements SensorEventListener{
 		   	        	  fScal += 0.25;
 		   	        	  if(fScal >= 5)
 		   	        		  fScal = 5;
-		   	        	imageView.setBitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
-	    						getWindowManager().getDefaultDisplay().getHeight(), xScaleFactor, yScaleFactor,0));
+		   	        	//imageView.setBitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
+	    					//	getWindowManager().getDefaultDisplay().getHeight(), xScaleFactor, yScaleFactor,0));	
+		   	        	imageView.setBitmap(myDoc.getPageBitmap(currentPage, nPageWidth*fScal, nPageHeight*fScal,rotateFlag,-1));
 		   	        	imageView.SetMartix(0, 0);
-		   	        	//imageView.setBitmap(myDoc.getPageBitmap(currentPage, nPageWidth*fScal, nPageHeight*fScal,rotateFlag,-1));
 	   	        		imageView.invalidate();	 
 	                    return true;
 	                } else if (gesture == Gesture.TWO_TAP) {
@@ -242,9 +245,10 @@ public class mainActivity extends Activity implements SensorEventListener{
 			   	 		fScal -= 0.25;
 			   	 		if(fScal <0.25)
 			   	 			fScal =(float) 0.25;
-			   	 		imageView.setBitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
-    						getWindowManager().getDefaultDisplay().getHeight(), xScaleFactor, yScaleFactor,0));
-			 	        //imageView.setBitmap(myDoc.getPageBitmap(currentPage, nPageWidth*fScal, nPageHeight*fScal,rotateFlag,-1));
+			   	 		//imageView.setBitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
+    						//getWindowManager().getDefaultDisplay().getHeight(), xScaleFactor, yScaleFactor,0));
+			 	        imageView.setBitmap(myDoc.getPageBitmap(currentPage, nPageWidth*fScal, nPageHeight*fScal,rotateFlag,-1));
+			 	        imageView.SetMartix(0, 0);
 			 	        imageView.invalidate();	
 	                    return true;
 	                } else if (gesture == Gesture.SWIPE_LEFT) {
@@ -253,9 +257,10 @@ public class mainActivity extends Activity implements SensorEventListener{
 	    					return true;
 	    				
 	    				currentPage--;
-	    				imageView.setBitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
-	    						getWindowManager().getDefaultDisplay().getHeight(), xScaleFactor, yScaleFactor,0));
-	    				//imageView.setBitmap(myDoc.getPageBitmap(currentPage, nPageWidth*fScal, nPageHeight*fScal,rotateFlag,-1));
+	    				//imageView.setBitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
+	    						//getWindowManager().getDefaultDisplay().getHeight(), xScaleFactor, yScaleFactor,0));
+	    				imageView.setBitmap(myDoc.getPageBitmap(currentPage, nPageWidth*fScal, nPageHeight*fScal,rotateFlag,-1));
+	    				imageView.SetMartix(0, 0);
 	    				imageView.invalidate();	     
 	                    return true;
 	                } else if (gesture == Gesture.SWIPE_RIGHT) {
@@ -264,9 +269,10 @@ public class mainActivity extends Activity implements SensorEventListener{
 	    					return true;
 
 	    				currentPage++;
-	    				imageView.setBitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
-	    						getWindowManager().getDefaultDisplay().getHeight(), xScaleFactor, yScaleFactor,0));
-	    				//imageView.setBitmap(myDoc.getPageBitmap(currentPage, nPageWidth*fScal, nPageHeight*fScal,rotateFlag,-1));
+	    				//imageView.setBitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
+	    						//getWindowManager().getDefaultDisplay().getHeight(), xScaleFactor, yScaleFactor,0));
+	    				imageView.setBitmap(myDoc.getPageBitmap(currentPage, nPageWidth*fScal, nPageHeight*fScal,rotateFlag,-1));
+	    				imageView.SetMartix(0, 0);
 	    				imageView.invalidate();	  
 	                    return true;
 	                }
@@ -308,34 +314,20 @@ public class mainActivity extends Activity implements SensorEventListener{
 	
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE)
+		if (!gyroLock && event.sensor.getType() == Sensor.TYPE_GYROSCOPE)
 		{
-			
-			//mAccVals.z = (float) (event.values[2] * FILTERING_FACTOR + mAccVals.z * (1.0 - FILTERING_FACTOR) );
 			//Log.d("Darien", "Gyro test");
 			//Log.d("Darien", "X:" + event.values[1] + " Y:" + event.values[0]);
-			if(!gyroLock){
-				/*
-				CuroffsetX = event.values[1]*.1f;  
-				CuroffsetY = event.values[0]*.1f; 
-				imageView.SetMartix(CuroffsetX - PreoffsetX,CuroffsetY - PreoffsetY);        	
+			gyroX = event.values[1] * gyroSense;
+			gyroY = event.values[0] * gyroSense;
+			//imageView.SetMartix(-20,-20);
+			//imageView.SetMartix(20,20);
+			if(2 < Math.abs(gyroX) || 2 < Math.abs(gyroY)){
+				imageView.SetMartix(gyroX, gyroY);
+				//imageView.SetMartix(-20,-20);
 				imageView.invalidate();
-				PreoffsetX = CuroffsetX;
-				PreoffsetY = CuroffsetY;
-				*/
-				imageView.SetMartix(event.values[1],event.values[0]);        	
-				imageView.invalidate();
+				//gyroLock = !gyroLock;
 			}
-		}
-		else if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION)
-		{
-			//mAccVals.x = (float) (event.values[1] * FILTERING_FACTOR + mAccVals.x * (1.0 - FILTERING_FACTOR) );
-			//mAccVals.y = (float) (event.values[0] * FILTERING_FACTOR + mAccVals.y * (1.0 - FILTERING_FACTOR) );
-			
-			
-			
-			//scene.camera().position.y = scene.camera().position.y + event.values[1]*.1f;
-			//scene.camera().position.x = scene.camera().position.x + event.values[0]*((float)0.8);
 		}
 	}
 

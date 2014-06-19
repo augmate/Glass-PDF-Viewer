@@ -13,8 +13,8 @@ public class PDFView extends ImageView{
 	private Bitmap m_map = null;
 	private int nStartX = 0;
 	private int nStartY = 0;
-	private int nCurDisplayX =0;
-	private int nCurDisplayY = 0;
+	public int nCurDisplayX = 0;
+	public int nCurDisplayY = 0;
 	private Bitmap CurrentBitmap = null;
 	private float nDisplayX = 0;
 	private float nDisplayY = 0;
@@ -59,13 +59,14 @@ public class PDFView extends ImageView{
 	{
 		nStartX = nCurDisplayX - (int)CurrentoffsetX;
 		nStartY = nCurDisplayY - (int)CurrentoffsetY;
-		//Log.d("Darien", "X:" + nStartX + " Y:" + nStartY + m_map.getWidth() );
+		//Log.d("Darien", "X:" + (int)CurrentoffsetX + " Y:" + (int)CurrentoffsetY);
 		if(nStartX < 0) nStartX = 0;
 		if(nStartX > (m_map.getWidth() - nDisplayX)) nStartX = (int) (m_map.getWidth() - nDisplayX);
 		if(nStartY < 0) nStartY = 0;
 		if(nStartY > (m_map.getHeight() - nDisplayY)) nStartY = (int) (m_map.getHeight() - nDisplayY);
 		nCurDisplayX = nStartX;
 		nCurDisplayY = nStartY;
+		Log.d("Darien", "X:" + (m_map.getWidth() - nStartX) + " Y:" + (m_map.getHeight()- nStartY));
 		CurrentBitmap = Bitmap.createBitmap(m_map, nStartX, nStartY,m_map.getWidth() - nStartX, m_map.getHeight()- nStartY);
 	}
 		
