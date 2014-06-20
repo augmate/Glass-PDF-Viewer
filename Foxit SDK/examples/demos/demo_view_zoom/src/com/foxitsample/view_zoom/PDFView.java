@@ -59,16 +59,24 @@ public class PDFView extends ImageView{
 	{
 		nStartX = nCurDisplayX - (int)CurrentoffsetX;
 		nStartY = nCurDisplayY - (int)CurrentoffsetY;
-		Log.d("Darien", "nStartX:" + nStartX + " nStartY:" + nStartY);
+		//Log.d("Darien", "nStartX:" + nStartX + " nStartY:" + nStartY);
 		if(nStartX < 0) nStartX = 0;
-		if(nStartX >= (m_map.getWidth()/4 - nDisplayX)) nStartX = (int) (m_map.getWidth()/4 - nDisplayX)-1;
-		Log.d("Darien", "m_map width:" + m_map.getWidth() + " nDisplayX:" + nDisplayX + " Diff:" + (int) (m_map.getWidth() - nDisplayX));
+		if(nStartX >= (m_map.getWidth() - nDisplayX)) nStartX = (int) (m_map.getWidth() - nDisplayX)-1;
+		//Log.d("Darien", "m_map width:" + m_map.getWidth() + " nDisplayX:" + nDisplayX + " Diff:" + (int) (m_map.getWidth() - nDisplayX));
 		if(nStartY < 0) nStartY = 0;
 		if(nStartY >= (m_map.getHeight() - nDisplayY)) nStartY = (int) (m_map.getHeight() - nDisplayY)-1;
 		nCurDisplayX = nStartX;
 		nCurDisplayY = nStartY;
-		Log.d("Darien", "X:" + (m_map.getWidth() - nStartX) + " Y:" + (m_map.getHeight()- nStartY));
+		//Log.d("Darien", "X:" + (m_map.getWidth() - nStartX) + " Y:" + (m_map.getHeight()- nStartY));
 		CurrentBitmap = Bitmap.createBitmap(m_map, nStartX, nStartY,m_map.getWidth() - nStartX, m_map.getHeight()- nStartY);
+	}
+	
+	public Bitmap pad(Bitmap Src, int padding_x, int padding_y){
+	    Bitmap outputimage = Bitmap.createBitmap(Src.getWidth() + padding_x,Src.getHeight() + padding_y, Bitmap.Config.ARGB_8888);
+	    Canvas can = new Canvas(outputimage);
+	    can.drawARGB(0x00,0x00,0x00,0x00); //This represents black color
+	    can.drawBitmap(Src, padding_x, padding_y, null);
+	return outputimage;
 	}
 		
 	public void setDisplay(float nWidth,float nHeight)

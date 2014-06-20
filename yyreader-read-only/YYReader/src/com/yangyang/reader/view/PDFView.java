@@ -28,6 +28,16 @@ public class PDFView extends SurfaceView implements Callback, Runnable{
 	private Thread  mViewThread = null;
 	private boolean mbRunning = false;
 	
+	private Bitmap m_map = null;
+	private int nStartX = 0;
+	private int nStartY = 0;
+	public int nCurDisplayX = 0;
+	public int nCurDisplayY = 0;
+	private Bitmap CurrentBitmap = null;
+	private float nDisplayX = 0;
+	private float nDisplayY = 0;
+	private int drawConut = 0;
+	
 	private	ArrayList<CPSIAction> mPSIActionList;
 
 	public class CPSIAction{
@@ -169,6 +179,22 @@ public class PDFView extends SurfaceView implements Callback, Runnable{
     			EMBJavaSupport.FPSIAddPoint(mFunc.getCurPSIHandle(), action.x, action.y, action.nPressures, action.flag);
     		}
     	}
+	}
+	
+	public void SetMartix(float CurrentoffsetX,float CurrentoffsetY)
+	{
+		nStartX = nCurDisplayX - (int)CurrentoffsetX;
+		nStartY = nCurDisplayY - (int)CurrentoffsetY;
+		Log.d("Darien", "nStartX:" + nStartX + " nStartY:" + nStartY);
+		if(nStartX < 0) nStartX = 0;
+		if(nStartX >= (m_map.getWidth() - nDisplayX)) nStartX = (int) (m_map.getWidth() - nDisplayX)-1;
+		Log.d("Darien", "m_map width:" + m_map.getWidth() + " nDisplayX:" + nDisplayX + " Diff:" + (int) (m_map.getWidth() - nDisplayX));
+		if(nStartY < 0) nStartY = 0;
+		if(nStartY >= (m_map.getHeight() - nDisplayY)) nStartY = (int) (m_map.getHeight() - nDisplayY)-1;
+		nCurDisplayX = nStartX;
+		nCurDisplayY = nStartY;
+		Log.d("Darien", "X:" + (m_map.getWidth() - nStartX) + " Y:" + (m_map.getHeight()- nStartY));
+		CurrentBitmap = Bitmap.createBitmap(m_map, nStartX, nStartY,m_map.getWidth() - nStartX, m_map.getHeight()- nStartY);
 	}
 
 }

@@ -39,15 +39,14 @@ public class mainActivity extends Activity implements SensorEventListener{
 	static final int M_ZoomOut = 4;
 	static final int M_ZoomInMax = 5;
 	static final int M_ZoomOutMax = 6;
-	
-	float nPageWidth = -1;
-	float nPageHeight = -1;
-	
+	float nPageWidth;
+	float nPageHeight;
 	private GestureDetector mGestureDetector;
 	private SensorManager mSensorManager;
 	private boolean gyroActive = false;
-	private int gyroSense = 80;
+	private int gyroSense = 120;
 	private int gyroCount = 0;
+	private int gyroThreshold = 10;
 	private float gyroX;
 	private float gyroY;
 	@Override
@@ -60,7 +59,10 @@ public class mainActivity extends Activity implements SensorEventListener{
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,  WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	    setContentView(imageView);
 	    		
-		//code start
+		/*code start
+		 * The following code pulls a PDF named 'augmate2.pdf' from the devices Pictures library and the initializes a FoxitDoc object from the PDF. Using the dimensions of the 
+		 * PDF, a bitmap is generated. After the gyroscope is initialized 
+	    */
 		try {
 			File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
      	    File file = new File(path, "augmate2.pdf");
@@ -76,7 +78,6 @@ public class mainActivity extends Activity implements SensorEventListener{
       		func.LoadCNSFontCMap();
       		func.LoadKoreaFontCMap();
       		func.LoadJapanFontCMap();
-      		//func.SetFontFileMap(strFontFilePath);
       		
       		myDoc = func.createFoxitDoc(fileName, password);
       		myDoc.CountPages();
@@ -89,12 +90,10 @@ public class mainActivity extends Activity implements SensorEventListener{
       		//imageView.setDisplay(display.getWidth()-nPageWidth, 0);
       		//imageView.setBitmap(myDoc.getPageBitmap(currentPage, display.getWidth(), display.getHeight(), xScaleFactor, yScaleFactor,0));
       		imageView.setBitmap(myDoc.getPageBitmap(currentPage, myDoc.GetPageSizeX(currentPage)* fScal, nHeight,rotateFlag,M_FitHeight));
-      		//getWindow().setLayout((int) (myDoc.GetPageSizeX(currentPage)* fScal),nHeight);
-      		imageView.invalidate();
-      		
+      		//getWindow().setLayout((int) (myDoc.GetPageSizeX(currentPage)*fScal),nHeight);
+      		imageView.invalidate();      		
       		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
     	    mGestureDetector = createGestureDetector(this);
-    	    //mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
 		} catch (Exception e){
 			/* In this demo, we decide do nothing for exceptions
 			 * however, you will want to handle exceptions in some way*/
@@ -115,7 +114,12 @@ public class mainActivity extends Activity implements SensorEventListener{
 	}
 
 	
-	 @Override
+	/*
+	 * When the camera button is pressed, the gyroscope is activated. The gyroscope allows the user to scan the PDF using head movements. When the button is pressed again, the
+	 * gyroscope is deactivated. 
+	 * @see android.app.Activity#onKeyDown(int, android.view.KeyEvent)
+	 */
+	@Override
     public boolean onKeyDown(int keycode, KeyEvent event) {
         if (keycode == KeyEvent.KEYCODE_CAMERA) {
         	gyroActive = !gyroActive;
@@ -140,12 +144,13 @@ public class mainActivity extends Activity implements SensorEventListener{
 		   	        	  fScal += 0.25;
 		   	        	  if(fScal >= 5)
 		   	        		  fScal = 5;
-			   	          //imageView.se//imageView.setBitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
-	    				  //tBitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
+	    				  //Bitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
 		    					//	getWindowManager().getDefaultDisplay().getHeight(), xScaleFactor, yScaleFactor,0));	
 		   	        	  imageView.setBitmap(myDoc.getPageBitmap(currentPage, nPageWidth*fScal, nPageHeight*fScal,rotateFlag,-1));
 		   	        	  imageView.SetMartix(0, 0);
 		   	        	  imageView.invalidate();	 
+		   	      		  //getWindow().setLayout((int) (myDoc.GetPageSizeX(currentPage)* fScal), getWindowManager().getDefaultDisplay().getHeight());
+
 	                    return true;
 	                } else if (gesture == Gesture.TWO_TAP) {
 	                	Log.d("Darien", "Zoom Out");
@@ -210,22 +215,31 @@ public class mainActivity extends Activity implements SensorEventListener{
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		gyroCount++;
-		if (gyroCount > 10 && event.sensor.getType() == Sensor.TYPE_GYROSCOPE)
-		{
-			//Log.d("Darien", "Gyro test");
-			//Log.d("Darien", "X:" + event.values[1] + " Y:" + event.values[0]);
-			gyroX = event.values[1] * gyroSense * fScal;
-			gyroY = event.values[0] * gyroSense * fScal;
-			//imageView.SetMartix(-20,-20);
-			//imageView.SetMartix(20,20);
-			//if(2 < Math.abs(gyroX) || 2 < Math.abs(gyroY)){
-				imageView.SetMartix(gyroX, gyroY);
-				//imageView.SetMartix(-20,-20);
-				imageView.invalidate();
-				//gyroLock = !gyroLock;
-			//}
-			gyroCount = 0;
-		}
+		if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE)
+			if(event.values[1]>4)
+				Log.d("Darien", ""+event.values[1]);
+			if(event.values[1]>4 && gyroCount>10){
+	        	if(currentPage+1==myDoc.CountPages())
+					return;
+				currentPage++;
+				//imageView.setBitmap(myDoc.getPageBitmap(currentPage, getWindowManager().getDefaultDisplay().getWidth(),
+						//getWindowManager().getDefaultDisplay().getHeight(), xScaleFactor, yScaleFactor,0));
+				imageView.setBitmap(myDoc.getPageBitmap(currentPage, nPageWidth*fScal, nPageHeight*fScal,rotateFlag,-1));
+				imageView.SetMartix(0, 0);
+				imageView.invalidate();	
+			}
+			else if (gyroCount > 10)
+			{
+				gyroX = event.values[1] * gyroSense * fScal;
+				gyroY = event.values[0] * gyroSense * fScal;
+				//if(2 < Math.abs(gyroX) || 2 < Math.abs(gyroY)){
+					imageView.SetMartix(gyroX, gyroY);
+					//imageView.SetMartix(-20,-20);
+					imageView.invalidate();
+					//gyroLock = !gyroLock;
+				//}
+				gyroCount = 0;
+			}
 	}
 
 	private void postToLog(String msg){
