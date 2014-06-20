@@ -46,7 +46,8 @@ public class mainActivity extends Activity implements SensorEventListener{
 	private GestureDetector mGestureDetector;
 	private SensorManager mSensorManager;
 	private boolean gyroActive = false;
-	private int gyroSense = 20;
+	private int gyroSense = 80;
+	private int gyroCount = 0;
 	private float gyroX;
 	private float gyroY;
 	@Override
@@ -85,8 +86,10 @@ public class mainActivity extends Activity implements SensorEventListener{
       		@SuppressWarnings("deprecation")
 			int nHeight = display.getHeight() ;
       		fScal = nHeight / myDoc.GetPageSizeY(currentPage);
+      		//imageView.setDisplay(display.getWidth()-nPageWidth, 0);
       		//imageView.setBitmap(myDoc.getPageBitmap(currentPage, display.getWidth(), display.getHeight(), xScaleFactor, yScaleFactor,0));
       		imageView.setBitmap(myDoc.getPageBitmap(currentPage, myDoc.GetPageSizeX(currentPage)* fScal, nHeight,rotateFlag,M_FitHeight));
+      		//getWindow().setLayout((int) (myDoc.GetPageSizeX(currentPage)* fScal),nHeight);
       		imageView.invalidate();
       		
       		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -115,7 +118,6 @@ public class mainActivity extends Activity implements SensorEventListener{
 	 @Override
     public boolean onKeyDown(int keycode, KeyEvent event) {
         if (keycode == KeyEvent.KEYCODE_CAMERA) {
-        	Log.d("Darien", "Gyro LOCK " + mSensorManager.getSensors());
         	gyroActive = !gyroActive;
         	if(gyroActive) 
         		mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_UI);
@@ -148,9 +150,7 @@ public class mainActivity extends Activity implements SensorEventListener{
 	                } else if (gesture == Gesture.TWO_TAP) {
 	                	Log.d("Darien", "Zoom Out");
 	                	if(fScal <=0.25)
-			   	 		{
 			   	 			return true;
-			   	 		}
 			   	 		fScal -= 0.25;
 			   	 		if(fScal <0.25)
 			   	 			fScal =(float) 0.25;
@@ -209,20 +209,22 @@ public class mainActivity extends Activity implements SensorEventListener{
 	
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE)
+		gyroCount++;
+		if (gyroCount > 10 && event.sensor.getType() == Sensor.TYPE_GYROSCOPE)
 		{
 			//Log.d("Darien", "Gyro test");
 			//Log.d("Darien", "X:" + event.values[1] + " Y:" + event.values[0]);
-			gyroX = event.values[1] * gyroSense;
-			gyroY = event.values[0] * gyroSense;
+			gyroX = event.values[1] * gyroSense * fScal;
+			gyroY = event.values[0] * gyroSense * fScal;
 			//imageView.SetMartix(-20,-20);
 			//imageView.SetMartix(20,20);
-			if(2 < Math.abs(gyroX) || 2 < Math.abs(gyroY)){
+			//if(2 < Math.abs(gyroX) || 2 < Math.abs(gyroY)){
 				imageView.SetMartix(gyroX, gyroY);
 				//imageView.SetMartix(-20,-20);
 				imageView.invalidate();
 				//gyroLock = !gyroLock;
-			}
+			//}
+			gyroCount = 0;
 		}
 	}
 

@@ -59,11 +59,12 @@ public class PDFView extends ImageView{
 	{
 		nStartX = nCurDisplayX - (int)CurrentoffsetX;
 		nStartY = nCurDisplayY - (int)CurrentoffsetY;
-		//Log.d("Darien", "X:" + (int)CurrentoffsetX + " Y:" + (int)CurrentoffsetY);
+		Log.d("Darien", "nStartX:" + nStartX + " nStartY:" + nStartY);
 		if(nStartX < 0) nStartX = 0;
-		if(nStartX > (m_map.getWidth() - nDisplayX)) nStartX = (int) (m_map.getWidth() - nDisplayX);
+		if(nStartX >= (m_map.getWidth()/4 - nDisplayX)) nStartX = (int) (m_map.getWidth()/4 - nDisplayX)-1;
+		Log.d("Darien", "m_map width:" + m_map.getWidth() + " nDisplayX:" + nDisplayX + " Diff:" + (int) (m_map.getWidth() - nDisplayX));
 		if(nStartY < 0) nStartY = 0;
-		if(nStartY > (m_map.getHeight() - nDisplayY)) nStartY = (int) (m_map.getHeight() - nDisplayY);
+		if(nStartY >= (m_map.getHeight() - nDisplayY)) nStartY = (int) (m_map.getHeight() - nDisplayY)-1;
 		nCurDisplayX = nStartX;
 		nCurDisplayY = nStartY;
 		Log.d("Darien", "X:" + (m_map.getWidth() - nStartX) + " Y:" + (m_map.getHeight()- nStartY));
