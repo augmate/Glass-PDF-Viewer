@@ -44,9 +44,9 @@ public class mainActivity extends Activity implements SensorEventListener{
 	private GestureDetector mGestureDetector;
 	private SensorManager mSensorManager;
 	private boolean gyroActive = false;
-	private int gyroSense = 120;
+	private final int gyroSense = 120;
 	private int gyroCount = 0;
-	private int gyroThreshold = 10;
+	private final int gyroThreshold = 10;
 	private float gyroX;
 	private float gyroY;
 	@Override
@@ -228,7 +228,7 @@ public class mainActivity extends Activity implements SensorEventListener{
 				imageView.SetMartix(0, 0);
 				imageView.invalidate();	
 			}
-			else if (gyroCount > 10)
+			else if (gyroCount > gyroThreshold)
 			{
 				gyroX = event.values[1] * gyroSense * fScal;
 				gyroY = event.values[0] * gyroSense * fScal;

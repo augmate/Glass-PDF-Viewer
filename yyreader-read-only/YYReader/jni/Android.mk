@@ -20,6 +20,6 @@ LOCAL_C_INCLUDES := include
 LOCAL_LDLIBS := -llog -g -L. -ljnigraphics
 
 #fill in the foxit library here
-LOCAL_LDLIBS += libs/libfpdfemb_android.a
+LOCAL_LDLIBS += libfpdfemb_android.a
 
 include $(BUILD_SHARED_LIBRARY)
