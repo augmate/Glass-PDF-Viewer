@@ -1,1 +1,0 @@
-The PDF Viewer is located in the project /home/darien/augmate_workspace/pdf_viewer/Foxit SDK/examples/demos/demo_view_zoom

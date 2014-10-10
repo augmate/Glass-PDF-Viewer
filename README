@@ -1,0 +1,5 @@
+The PDF Viewer is located in the project /home/darien/augmate_workspace/pdf_viewer/Foxit SDK/examples/demos/demo_view_zoom
+PDF Viewer_1, sweet-bear, and yyreader-read-only are all defunct.
+In order to see the PDF on Glass, a pdf named 'augmate2.pdf' must be in the Pictures directory on the Glass
+Since this project relies on the FoxIt SDK, the trial may have expired if you're unable to run the app without it crashing. 
+You'll need to contact FoxIt directly to resolve the issue. 
